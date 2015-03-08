@@ -13,5 +13,7 @@ BOT_NAME = 'mvsgst'
 SPIDER_MODULES = ['mvsgst.spiders']
 NEWSPIDER_MODULE = 'mvsgst.spiders'
 
+ITEM_PIPELINES = {'mvsgst.pipelines.MvsgstPipeline':800}
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'mvsgst (+http://www.yourdomain.com)'

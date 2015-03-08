@@ -7,6 +7,7 @@ from mvsgst.items import MvsgstItem
 from scrapy.selector import HtmlXPathSelector
 import time
 import re
+import random
 
 class DbmvSpider(scrapy.Spider):
     name = "vcmv"
@@ -34,19 +35,31 @@ class DbmvSpider(scrapy.Spider):
         details['types']=x.xpath('//*[@rel="v:genre"]/text()').extract()
         details['date'] = dre.findall(itemurl.body.decode('utf8'))
         details['length'] = x.xpath('//*[@property="v:runtime"]/text()').extract()
-        details['summary'] = x.xpath('//*[@property="v:summary"]/text()').extract()
+        summ= x.xpath('//*[@property="v:summary"]/p/text()').extract()
+        details['summary'] = []
+        for i in summ:
+            i=i.replace('"',u'')
+            i=i.replace(',',u'')
+            i=i.replace(u'\u201c',u'')
+            details['summary'].append(i)
+        
         #details['rank']= x.xpath('//*[@id="scoreDivDiv"]/text()').extract()
         #TODO this place should be rebuilt, but for this case, enough
+        time.sleep(random.randint(5,10))
         return details
 
     def parse(self, response):
 
         x = scrapy.Selector(response)
         sites = x.xpath('//*[@class="clearfix entry_cover_list"]/li/a')
+        i=0
         for ct in sites:
+            i+=1
             item = self.load_item(ct)
             yield scrapy.Request(item['url'][0],meta={'item':item},callback=self.load_detail)
-        time.sleep(8)
+        time.sleep(random.randint(5,15))
         nexturl=x.xpath('//*[@rel="next"]/@href').extract()
         if len(nexturl)>0:
             yield scrapy.Request('http://www.verycd.com'+nexturl[0],callback=self.parse)  
+        #if i==10:
+        #    sys.exit(0)
