@@ -5,3 +5,4 @@ c <- file("data.json", "r")
 l <- readLines(c, -1L)
 json <- lapply(X=l, fromJSON)
 length(json)
+
