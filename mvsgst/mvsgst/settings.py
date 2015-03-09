@@ -15,5 +15,10 @@ NEWSPIDER_MODULE = 'mvsgst.spiders'
 
 ITEM_PIPELINES = {'mvsgst.pipelines.MvsgstPipeline':800}
 
+EXTENSIONS = {'scrapy.contrib.throttle.AutoThrottle':500,}
+
+DOWNLOAD_DELAY = 2
+
+LOG_LEVEL = 'WARNING' 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'mvsgst (+http://www.yourdomain.com)'

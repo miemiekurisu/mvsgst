@@ -52,7 +52,7 @@ class DbmvSpider(scrapy.Spider):
         
         #details['rank']= x.xpath('//*[@id="scoreDivDiv"]/text()').extract()
         #TODO this place should be rebuilt, but for this case, enough
-        time.sleep(random.randint(5,10))
+        time.sleep(random.randint(1,3))
         return details
 
     def parse(self, response):
@@ -64,7 +64,7 @@ class DbmvSpider(scrapy.Spider):
             i+=1
             item = self.load_item(ct)
             yield scrapy.Request(item['url'][0],meta={'item':item},callback=self.load_detail)
-        time.sleep(random.randint(5,15))
+        time.sleep(random.randint(3,10))
         nexturl=x.xpath('//*[@rel="next"]/@href').extract()
         if len(nexturl)>0:
             yield scrapy.Request('http://www.verycd.com'+nexturl[0],callback=self.parse)  

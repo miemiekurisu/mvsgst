@@ -1,3 +1,3 @@
 rm data.json
-rm verycd.log
-scrapy crawl vcmv --set LOG_FILE=verycd.log
+rm pau/vcmv/verycd.log
+scrapy crawl vcmv --set LOG_FILE=pau/vcmv/verycd.log -s JOBDIR=pau/vcmv
