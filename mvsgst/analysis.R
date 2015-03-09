@@ -1,4 +1,4 @@
-library(rjson)
+library(RJSONIO)
 #a1 = fromJSON(paste(readLines("datatst.json")),)
 
 c <- file("data.json", "r")

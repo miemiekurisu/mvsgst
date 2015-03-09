@@ -24,24 +24,31 @@ class DbmvSpider(scrapy.Spider):
                 item['url'].append(staticurl+i)
         return item
 
+    def regprocess(self,lst):
+        ret  = []
+        for i in lst:
+            i=i.replace('"','')
+            i=i.replace(',','')
+            i=i.replace(u'\u201c',u'')
+            ret.append(i)
+        return ret
+ 
+
     def load_detail(self,itemurl):
         dre = re.compile(ur'\u4e0a\u6620\u65e5\u671f.*\>(.*)\<\/em\>')
         details = itemurl.meta['item']         
         x = scrapy.Selector(itemurl)
         details['mvname']= x.xpath('//*[@class="titleDiv"]/h1/text()').extract()
-        details['enname']=x.xpath('//*[@class="titleDiv"]/h2/text()').extract()
+        enn = x.xpath('//*[@class="titleDiv"]/h2/text()').extract()
+        details['enname'] = self.regprocess(enn)
+        
         details['director']=x.xpath('//*[@rel="v:directedBy"]/text()').extract()
         details['actors']=x.xpath('//*[@rel="v:starring"]/text()').extract()
         details['types']=x.xpath('//*[@rel="v:genre"]/text()').extract()
         details['date'] = dre.findall(itemurl.body.decode('utf8'))
         details['length'] = x.xpath('//*[@property="v:runtime"]/text()').extract()
         summ= x.xpath('//*[@property="v:summary"]/p/text()').extract()
-        details['summary'] = []
-        for i in summ:
-            i=i.replace('"',u'')
-            i=i.replace(',',u'')
-            i=i.replace(u'\u201c',u'')
-            details['summary'].append(i)
+        details['summary'] = self.regprocess(summ)
         
         #details['rank']= x.xpath('//*[@id="scoreDivDiv"]/text()').extract()
         #TODO this place should be rebuilt, but for this case, enough
