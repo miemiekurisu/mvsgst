@@ -26,10 +26,13 @@ class DbmvSpider(scrapy.Spider):
 
     def regprocess(self,lst):
         ret  = []
+        if len(lst) ==0:
+            return ret
         for i in lst:
             i=i.replace('"','')
             i=i.replace(',','')
             i=i.replace(u'\u201c',u'')
+            i=i.replace('\\','')
             ret.append(i)
         return ret
  
@@ -38,13 +41,13 @@ class DbmvSpider(scrapy.Spider):
         dre = re.compile(ur'\u4e0a\u6620\u65e5\u671f.*\>(.*)\<\/em\>')
         details = itemurl.meta['item']         
         x = scrapy.Selector(itemurl)
-        details['mvname']= x.xpath('//*[@class="titleDiv"]/h1/text()').extract()
+        details['mvname']= self.regprocess(x.xpath('//*[@class="titleDiv"]/h1/text()').extract())
         enn = x.xpath('//*[@class="titleDiv"]/h2/text()').extract()
         details['enname'] = self.regprocess(enn)
         
-        details['director']=x.xpath('//*[@rel="v:directedBy"]/text()').extract()
-        details['actors']=x.xpath('//*[@rel="v:starring"]/text()').extract()
-        details['types']=x.xpath('//*[@rel="v:genre"]/text()').extract()
+        details['director']=self.regprocess(x.xpath('//*[@rel="v:directedBy"]/text()').extract())
+        details['actors']=self.regprocess(x.xpath('//*[@rel="v:starring"]/text()').extract())
+        details['types']=self.regprocess(x.xpath('//*[@rel="v:genre"]/text()').extract())
         details['date'] = dre.findall(itemurl.body.decode('utf8'))
         details['length'] = x.xpath('//*[@property="v:runtime"]/text()').extract()
         summ= x.xpath('//*[@property="v:summary"]/p/text()').extract()
