@@ -52,6 +52,7 @@ class DbmvSpider(scrapy.Spider):
         details['length'] = x.xpath('//*[@property="v:runtime"]/text()').extract()
         summ= x.xpath('//*[@property="v:summary"]/p/text()').extract()
         details['summary'] = self.regprocess(summ)
+        details['imdblink'] = x.xpath('//*[@id="imdb_rate_id"]/a/text()').extract()
         
         #details['rank']= x.xpath('//*[@id="scoreDivDiv"]/text()').extract()
         #TODO this place should be rebuilt, but for this case, enough
