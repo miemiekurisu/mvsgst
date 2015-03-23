@@ -1,8 +1,10 @@
 import codecs
 import json
 import movie
+import datetime
 
 def loadfile(file_path):
+    sttm = datetime.datetime.now()
     mfile = codecs.open(file_path,'r',encoding='utf-8')
     movies = []
     j=0
@@ -16,14 +18,19 @@ def loadfile(file_path):
         except ValueError:
             print 'Find error, No. is: '+ str(j)
             continue
+    edtm = datetime.datetime.now()
+    print (edtm-sttm).seconds
     return movies
 
-mvs = loadfile('data1.json')
-tp=set([])
-for i in mvs:
-    tp |= set(i.types)
-actors=set([])
-for i in mvs:
-    actors |= set(i.actors)
+def loadset(mvlist,neededname):
+    execstr = "neededsets |= set(i.%s)" % neededname
+    neededsets = set([])
+    for i in mvlist:
+        exec  execstr 
+    return list(neededsets)
+
+#mvs = loadfile('data1.json')
+#tp=loadset(mvs,'types')
+#actors=loadset(mvs,'actors')
 
 
